@@ -1,3 +1,5 @@
+import { UpdateComplaintPayload } from "@/types/complaints/type";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 
 export function getToken() {
@@ -113,19 +115,33 @@ export async function getAllComplaintsApi(query = "") {
   return json; // { success, data, pagination }
 }
 
-export async function assignComplaintApi(complaintId: number, staffEmail: string) {
-  const token = getToken();
-  const res = await fetch(`${API_URL}/complaints/${complaintId}/assign`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    // We send the staffEmail. The backend ignores the adminEmail and uses the token's email.
-    body: JSON.stringify({ staffEmail, adminEmail: "placeholder" }), 
-  });
+export async function assignComplaintApi(
+  complaintId: number,
+  staffEmail: string,
+  adminEmail: string
+) {
+  const res = await fetch(
+    `${API_URL}/complaints/${complaintId}/assign`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
+      },
+      body: JSON.stringify({
+        staffEmail,
+        adminEmail,
+      }),
+    }
+  );
+
   const json = await res.json();
-  if (!res.ok) throw new Error(json.message || "Failed to assign complaint");
+
+  if (!res.ok) {
+    console.error("Assignment API error:", json);
+    throw new Error(json.message || "Failed to assign complaint");
+  }
+
   return json;
 }
 
@@ -156,5 +172,79 @@ export async function createDepartmentApi(data: any) {
   });
   const json = await res.json();
   if (!res.ok) throw new Error(json.message || "Failed to create department");
+  return json.data;
+}
+
+
+export async function deleteComplaintApi(complaintId: number) {
+  const token = getToken();
+  const res = await fetch(`${API_URL}/complaints/${complaintId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.message || "Failed to delete complaint");
+  return json;
+}
+
+export async function updateComplaintApi(
+  complaintId: number,
+  data: UpdateComplaintPayload
+) {
+  const token = getToken();
+
+  console.log("Complaint ID:", complaintId);
+  console.log("Update payload:", data);
+
+  const body = JSON.stringify(data);
+
+  console.log("Serialized request body:", body);
+
+  const res = await fetch(`${API_URL}/complaints/${complaintId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body,
+  });
+
+  const json = await res.json();
+
+  if (!res.ok) {
+    console.error("Update API failed:", json);
+    throw new Error(json.message || "Failed to update complaint");
+  }
+
+  return json;
+}
+
+
+// ---------- ADMIN PROFILE ----------
+
+export async function getAdminProfileApi() {
+  const token = getToken();
+  const res = await fetch(`${API_URL}/staff/me`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.message || "Failed to fetch profile");
+  return json.data;
+}
+
+export async function updateAdminProfileApi(data: any) {
+  const token = getToken();
+  const res = await fetch(`${API_URL}/staff/me`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.message || "Failed to update profile");
   return json.data;
 }
