@@ -70,7 +70,7 @@ export default function AdminRegisterPage() {
         <>
           <p>Already have an administrator account?</p>
           <Link
-            href="/login"
+            href="/admin-auth/login"
             className="font-semibold text-primary underline-offset-4 hover:underline"
           >
             Sign in

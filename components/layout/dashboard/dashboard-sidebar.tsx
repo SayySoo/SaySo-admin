@@ -49,18 +49,20 @@ const navigation = [
     icon: Tags,
   },
   {
+    title: "Department",
+    url: "/admin/department",
+    icon: Building
+  },
+  {
     title: "Staff",
     url: "/admin/staff",
     icon: Users,
   },
-  {
-    title: "Department",
-    url: "/admin/department",
-    icon: Building
-  }
+  
 ];
 
 const accountNavigation = [
+  
   {
     title: "Settings",
     url: "/admin/settings",

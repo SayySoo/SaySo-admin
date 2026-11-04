@@ -30,6 +30,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Link from "next/link";
 
 const pageTitles: Record<string, string> = {
   "/admin/dashboard": "Dashboard",
@@ -105,6 +106,7 @@ export function DashboardNavbar() {
         <DropdownMenuContent align="end" className="w-64">
 
           {/* Admin Details */}
+        <Link href={`/admin-profile/${user?.sub}`}>
           <div className="flex items-center gap-3 p-3">
             <Avatar className="size-10 shrink-0">
               <AvatarFallback>
@@ -126,6 +128,8 @@ export function DashboardNavbar() {
               </p>
             </div>
           </div>
+        
+        </Link>
 
           <DropdownMenuSeparator />
 
