@@ -61,7 +61,7 @@ const navigation = [
   
 ];
 
-const accountNavigation = [
+/* const accountNavigation = [
   
   {
     title: "Settings",
@@ -69,7 +69,7 @@ const accountNavigation = [
     icon: Settings,
   },
 ];
-
+ */
 export function DashboardSidebar() {
   const pathname = usePathname();
   const { logout } = useAuth();
@@ -148,7 +148,7 @@ export function DashboardSidebar() {
           </SidebarMenu>
         </SidebarGroup>
 
-        <SidebarGroup>
+       {/*  <SidebarGroup>
           <SidebarGroupLabel>
             Account
           </SidebarGroupLabel>
@@ -176,7 +176,7 @@ export function DashboardSidebar() {
               );
             })}
           </SidebarMenu>
-        </SidebarGroup>
+        </SidebarGroup> */}
       </SidebarContent>
 
       {/* Logout */}
